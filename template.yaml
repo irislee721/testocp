@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${NAME}
+  namespace: ${NAMESPACE}
+  labels:
+    auth: ${NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      auth: ${NAME}
+  template:
+    metadata:
+      labels:
+        auth: ${NAME}
+    spec:
+      containers:
+        - name: ${NAME}
+          image: ${IMAGE}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: Nothing
+              value: Nothing
+          ports:
+            - containerPort: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ${NAME}
+  namespace: ${NAMESPACE}
+spec:
+  selector:
+    auth: ${NAME}
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
